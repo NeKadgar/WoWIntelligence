@@ -7,8 +7,8 @@ class GameInfoPixel:
         self.x = x
         self.y = y
 
-    def set_value(self, pixels: np.array):
+    def set_value(self, pixels: np.ndarray):
         self.value = self._process_pixels(pixels)
 
-    def _process_pixels(self, pixels: np.array):
+    def _process_pixels(self, pixels: np.ndarray):
         raise NotImplementedError
