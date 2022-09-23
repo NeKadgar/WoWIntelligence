@@ -1,3 +1,6 @@
+from lib.utils import drag_and_get_box
+
+
 class Window:
     def __init__(self, top: int, left: int, width: int, height: int):
         self.top = top
@@ -7,3 +10,11 @@ class Window:
 
     def get_image(self):
         raise NotImplementedError
+
+    @classmethod
+    def from_dragged_zone(cls):
+        key = "T"
+        print(f"Hold {key} and draw target box")
+        top, left, width, height = drag_and_get_box(key)
+        return cls(top, left, width, height)
+

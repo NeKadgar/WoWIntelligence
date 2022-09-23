@@ -6,6 +6,7 @@ from screen.window import Window
 
 class MSSWindow(Window):
     def __init__(self, top: int, left: int, width: int, height: int):
+        print(top, left, width, height)
         super().__init__(top, left, width, height)
         self._monitor_data = self._get_monitor_data(top, left, width, height)
 

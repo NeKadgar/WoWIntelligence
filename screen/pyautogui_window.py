@@ -1,8 +1,9 @@
 import numpy as np
 import pyautogui
+from screen.window import Window
 
 
-class PyautoguiWindow:
+class PyautoguiWindow(Window):
     def __init__(self, top: int, left: int, width: int, height: int):
         self.top = top
         self.left = left

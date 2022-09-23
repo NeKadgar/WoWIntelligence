@@ -1,3 +1,10 @@
+import time
+
+from screen.window import Window
+from info_pixels.coordinate_pixel import CoordinatePixel
+from info_pixels.facing_pixel import FacingPixel
+from exceptions import WindowMissingError
+
 
 class GameInfo:
     """Singleton class
@@ -7,13 +14,25 @@ class GameInfo:
 
     _instance = None
 
-    def __init__(self, x, y):
+    def __init__(self, window: Window):
         self.x = None
         self.y = None
         self.facing = None
 
+        info = {
+            "x": CoordinatePixel,
+            "y": CoordinatePixel,
+            "facing": FacingPixel
+        }
+
+        for key, func in info.items():
+            setattr(self, key, func(window.left, window.top))
+            time.sleep(1)
+
     @classmethod
-    def instance(cls):
+    def instance(cls, window: Window = None):
         if cls._instance is None:
-            cls._instance = cls(1, 2)
+            if window is None:
+                raise WindowMissingError
+            cls._instance = cls(window)
         return cls._instance
