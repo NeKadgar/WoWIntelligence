@@ -5,10 +5,8 @@ import time
 
 
 def get_rgb_from_numpy(np_array: np.ndarray, cord_x: int, cord_y: int):
-    rgb = np_array[cord_x][cord_y]
-    if len(rgb) == 3:
-        return *rgb, 1
-    return rgb
+    b, g, r = np_array[cord_y][cord_x][:3]
+    return r, g, b
 
 
 def get_absolute_cursor_position(key: str):

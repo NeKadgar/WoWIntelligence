@@ -1,2 +1,6 @@
 class WindowMissingError(Exception):
     ...
+
+
+class NotFoundInfoPixel(Exception):
+    ...

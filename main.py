@@ -12,5 +12,6 @@ info = GameInfo.instance(window)
 
 for image in WindowStream(window).get_stream():
     t = time.time()
+    info.update(image)
     display.paint(image)
-    print(time.time() - t)
+    # print(f"{1.0 / (time.time() - t) :,.2f} fps")
