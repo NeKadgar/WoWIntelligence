@@ -5,6 +5,7 @@ from info_pixels.game_info_pixel import GameInfoPixel
 from info_pixels.coordinate_pixel import CoordinatePixel
 from info_pixels.facing_pixel import FacingPixel
 from exceptions import WindowMissingError, NotFoundInfoPixel
+from application_types import PixelsArray
 
 
 class GameInfo:
@@ -31,11 +32,11 @@ class GameInfo:
             raise NotFoundInfoPixel
         return info
 
-    def update(self, image):
+    def update(self, image: PixelsArray):
         for name in self.info.keys():
             pixel: GameInfoPixel = getattr(self, name)
             pixel.set_value(image)
-            # pixel.print_value()
+            pixel.print_value()
 
     @classmethod
     def instance(cls, window: Window = None):
