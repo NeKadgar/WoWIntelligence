@@ -1,4 +1,4 @@
-import numpy as np
+from screen.frame import Frame
 from lib.utils import get_absolute_cursor_position
 
 
@@ -20,8 +20,8 @@ class GameInfoPixel:
     def print_value(self):
         print(f"{self.name}: {self.value}")
 
-    def set_value(self, pixels: np.ndarray):
-        self.value = self._process_pixels(pixels)
+    def set_value(self, frame: Frame):
+        self.value = self._process_pixels(frame)
 
-    def _process_pixels(self, pixels: np.ndarray):
+    def _process_pixels(self, frame: Frame):
         raise NotImplementedError

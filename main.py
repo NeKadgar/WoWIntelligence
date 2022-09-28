@@ -1,30 +1,39 @@
 import time
-import cv2
+import keyboard
 
 from screen.mss_window import MSSWindow
 from screen.display import Display, DisplayType
-from screen.wow_stream import WindowStream
+from screen.window_stream import WindowStream
+from screen.recorder.video_recorder import VideoRecorder
+from screen.recorder.frame_queue import FrameQueue
 from game.game_info import GameInfo
 from vision.feature_extractor import FeatureExtractor
 
 window = MSSWindow.from_dragged_zone()
+# window = MSSWindow(0, 0, 1920, 1080)
 display = Display(window.width, window.height, DisplayType.RGB)
 info = GameInfo.instance(window)
 extractor = FeatureExtractor()
+queue = FrameQueue()
 
+t = time.time()
+record_started = False
 
-for image in WindowStream(window).get_stream():
+for frame in WindowStream(window).get_stream():
+    if record_started:
+        queue.add(frame)
+
+    info.update(frame)
+    matches = extractor.extract_matches(frame)
+    display.paint(frame.draw_matches_lines(matches))
+
+    if keyboard.is_pressed("P"):
+        record_started = True
+
+    if keyboard.is_pressed("Q"):
+        break
+
+    print(1.0 / (time.time() - t))
     t = time.time()
-    info.update(image)
-    matches = extractor.extract_matches(image)
 
-    # draw matching lines
-    if matches is not None:
-        for p1, p2 in matches:
-            u1, v1 = map(lambda x: int(round(x)), p1.pt)
-            u2, v2 = map(lambda x: int(round(x)), p2.pt)
-            image = cv2.line(image, (u1, v1), (u2, v2), (0, 0, 255), 2)
-        print(f"{len(matches)} matches")
-
-    display.paint(image)
-    print(f"{1.0 / (time.time() - t) :,.2f} fps")
+VideoRecorder.create_video_from_queue(queue, "new", fps=120)

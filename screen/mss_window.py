@@ -1,6 +1,7 @@
 import numpy as np
 from mss import mss
 
+from screen.frame import Frame
 from screen.window import Window
 
 
@@ -12,9 +13,10 @@ class MSSWindow(Window):
 
     def get_image(self):
         with mss() as sct:
-            return np.array(
+            pixels_array = np.array(
                 sct.grab(self._monitor_data)
             )
+            return Frame(pixels_array)
 
     @staticmethod
     def _get_monitor_data(top: int, left: int, width: int, height: int):

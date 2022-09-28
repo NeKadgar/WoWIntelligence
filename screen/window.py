@@ -1,5 +1,5 @@
 from lib.utils import drag_and_get_box
-from application_types import PixelsArray
+from screen.frame import Frame
 
 
 class Window:
@@ -9,7 +9,7 @@ class Window:
         self.width = width
         self.height = height
 
-    def get_image(self) -> PixelsArray:
+    def get_image(self) -> Frame:
         raise NotImplementedError
 
     @classmethod
