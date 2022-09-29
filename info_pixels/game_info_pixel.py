@@ -3,19 +3,16 @@ from lib.utils import get_absolute_cursor_position
 
 
 class GameInfoPixel:
-    def __init__(self, name: str, padding_x: int, padding_y: int):
+    def __init__(self, name: str, x: int = None, y: int = None):
         self.value = None
-        x, y = self._init_position()
-        self.x = x - padding_x
-        self.y = y - padding_y
+        self.x = x
+        self.y = y
         self.name = name
-        print(f"Successfully set {name}", self.x, self.y)
+        print(name, x, y)
 
-    @staticmethod
-    def _init_position():
-        key = "V"
-        print(f"Move cursor to target position and then press {key}")
-        return get_absolute_cursor_position(key)
+    def set_position(self, x: int, y: int):
+        self.x, self.y = x, y
+        print(f"Successfully set {self.name}", self.x, self.y)
 
     def print_value(self):
         print(f"{self.name}: {self.value}")

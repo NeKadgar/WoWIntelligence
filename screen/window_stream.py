@@ -1,3 +1,4 @@
+from exceptions import NoMoreFrames
 from screen.window import Window
 from screen.frame import Frame
 from typing import Iterator
@@ -9,4 +10,7 @@ class WindowStream:
 
     def get_stream(self) -> Iterator[Frame]:
         while True:
-            yield self.window.get_image()
+            try:
+                yield self.window.get_image()
+            except NoMoreFrames:
+                return

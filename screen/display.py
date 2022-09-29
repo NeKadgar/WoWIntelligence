@@ -5,8 +5,9 @@ from application_types import PixelsArray
 
 
 class DisplayType(Enum):
-    RGB = 0
-    BGR = 1
+    RGBA = 'RGBA'
+    RGB = 'RGB'
+    BGR = 'BGR'
 
 
 class Display(object):
@@ -26,7 +27,7 @@ class Display(object):
         # draw
         surf = sdl2.ext.pixels3d(self.window.get_surface())
 
-        if self.display_type == DisplayType.BGR:
+        if self.display_type in (DisplayType.BGR, DisplayType.RGB):
             surf[:, :, 0:3] = image.swapaxes(0, 1)
         elif self.display_type == DisplayType.RGB:
             surf[:, :, 0:4] = image.swapaxes(0, 1)

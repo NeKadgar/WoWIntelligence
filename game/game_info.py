@@ -1,12 +1,10 @@
-import time
-
+from info_pixels.info_pixel_initializer import InfoPixelInitializer
 from screen.frame import Frame
 from screen.window import Window
 from info_pixels.game_info_pixel import GameInfoPixel
 from info_pixels.coordinate_pixel import CoordinatePixel
 from info_pixels.facing_pixel import FacingPixel
 from exceptions import WindowMissingError, NotFoundInfoPixel
-from application_types import PixelsArray
 
 
 class GameInfo:
@@ -23,13 +21,13 @@ class GameInfo:
             "y": CoordinatePixel,
             "facing": FacingPixel
         }
-
         self._init_info_pixels(window)
 
     def _init_info_pixels(self, window):
-        for name, func in self.info.items():
-            setattr(self, name, func(name, window.left, window.top))
-            time.sleep(1)
+        frame = window.get_image()
+        InfoPixelInitializer(frame, self.info)
+        for name, sensor in self.info.items():
+            setattr(self, name, sensor)
 
     def __getattr__(self, item) -> GameInfoPixel:
         if info := self.info.get(item) is None:
