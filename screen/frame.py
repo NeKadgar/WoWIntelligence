@@ -1,3 +1,5 @@
+from typing import Tuple, List
+
 import cv2
 from application_types import PixelsArray
 
@@ -28,6 +30,12 @@ class Frame:
             u1, v1 = map(lambda x: int(round(x)), p1.pt)
             u2, v2 = map(lambda x: int(round(x)), p2.pt)
             image = cv2.line(image, (u1, v1), (u2, v2), (0, 0, 255), 2)  # noqa
+        return image
+
+    def matplot_draw_circles(self, circles: List[Tuple[int, int]]):
+        image = self.get_matplot_format()
+        for x, y in circles:
+            image = cv2.circle(image, (x, y), 1, (255, 0, 0), 1)  # noqa
         return image
 
     def get_matplot_format(self):

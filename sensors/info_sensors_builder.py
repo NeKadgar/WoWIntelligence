@@ -35,8 +35,8 @@ class InfoSensorsBuilder:
 
         self.sensors_text = plt.text(1, 0, "", ha='right', transform=self._ax.transAxes, fontsize=20, wrap=True)
         self.sensors_text.set_bbox(dict(facecolor='yellow', alpha=0.5, edgecolor='yellow'))
-
-        self._ax.imshow(frame.get_matplot_format())
+        self._frame = frame
+        self._im = self._ax.imshow(self._frame.get_matplot_format())
         self._fig.canvas.mpl_connect('key_press_event', self._on_press)
         plt.show()
 
@@ -51,7 +51,7 @@ class InfoSensorsBuilder:
             plt.close()
             return
         self.help_text.set_text(self._get_current_text())
-        self.sensors_text.set_text(self._get_sensors_text())
+        self._update_sensors_visible_info()
         plt.pause(0)
 
     def _on_set_pos(self, x: int, y: int):
@@ -87,9 +87,18 @@ class InfoSensorsBuilder:
     def _get_current_sensor_name(self):
         return list(self._sensors_schema.keys())[self._step]
 
+    def _update_sensors_visible_info(self):
+        self.sensors_text.set_text(self._get_sensors_text())
+        self._show_circles()
+
+    def _show_circles(self):
+        circles = []
+        for sensor in self._sensors.values():
+            circles.append((sensor.x, sensor.y))
+        self._im.set_data(self._frame.matplot_draw_circles(circles))
+
     def _get_sensors_text(self):
         text = ""
         for key, sensor in self._sensors.items():
-            if not isinstance(sensor, type):
-                text += f"{key.upper()} - {sensor.x} {sensor.y}\n"
+            text += f"{key.upper()} - {sensor.x} {sensor.y}\n"
         return text
