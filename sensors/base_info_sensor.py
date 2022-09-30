@@ -1,8 +1,7 @@
 from screen.frame import Frame
-from lib.utils import get_absolute_cursor_position
 
 
-class GameInfoPixel:
+class BaseInfoSensor:
     def __init__(self, name: str, x: int = None, y: int = None):
         self.value = None
         self.x = x

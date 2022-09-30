@@ -29,3 +29,6 @@ class Frame:
             u2, v2 = map(lambda x: int(round(x)), p2.pt)
             image = cv2.line(image, (u1, v1), (u2, v2), (0, 0, 255), 2)  # noqa
         return image
+
+    def get_matplot_format(self):
+        return cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)  # noqa

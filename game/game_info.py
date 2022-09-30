@@ -1,10 +1,10 @@
-from info_pixels.info_pixel_initializer import InfoPixelInitializer
+from sensors.info_sensors_builder import InfoSensorsBuilder
 from screen.frame import Frame
 from screen.window import Window
-from info_pixels.game_info_pixel import GameInfoPixel
-from info_pixels.coordinate_pixel import CoordinatePixel
-from info_pixels.facing_pixel import FacingPixel
-from exceptions import WindowMissingError, NotFoundInfoPixel
+from sensors.base_info_sensor import BaseInfoSensor
+from sensors.coordinate_sensor import CoordinateSensor
+from sensors.facing_sensor import FacingSensor
+from exceptions import WindowMissingError
 
 
 class GameInfo:
@@ -16,27 +16,22 @@ class GameInfo:
     _instance = None
 
     def __init__(self, window: Window):
-        self.info = {
-            "x": CoordinatePixel,
-            "y": CoordinatePixel,
-            "facing": FacingPixel
+        self.info_schema = {
+            "x": CoordinateSensor,
+            "y": CoordinateSensor,
+            "facing": FacingSensor
         }
         self._init_info_pixels(window)
 
     def _init_info_pixels(self, window):
         frame = window.get_image()
-        InfoPixelInitializer(frame, self.info)
-        for name, sensor in self.info.items():
+        sensors: dict = InfoSensorsBuilder.from_sensors_dict(frame, self.info_schema)
+        for name, sensor in sensors.items():
             setattr(self, name, sensor)
 
-    def __getattr__(self, item) -> GameInfoPixel:
-        if info := self.info.get(item) is None:
-            raise NotFoundInfoPixel
-        return info
-
     def update(self, frame: Frame):
-        for name in self.info.keys():
-            pixel: GameInfoPixel = getattr(self, name)
+        for name in self.info_schema.keys():
+            pixel: BaseInfoSensor = getattr(self, name)
             pixel.set_value(frame)
             pixel.print_value()
 
