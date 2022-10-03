@@ -1,8 +1,8 @@
 import cv2
-import numpy
-
+import numpy as np
+from skimage.measure import ransac
+from skimage.transform import FundamentalMatrixTransform, EssentialMatrixTransform
 from screen.frame import Frame
-from application_types import PixelsArray
 
 
 class FeatureExtractor:
@@ -14,22 +14,39 @@ class FeatureExtractor:
     def extract_matches(self, frame: Frame):
         kps, des = self.extract_features(frame)
         matches = self._get_matches(des)
-        matches = self._sort_matches(matches)
-        matches = self._convert_to_points(kps, matches)
+        matches = self._filter_matches(matches)
+        points = self._convert_to_points(kps, matches)
+        points = self._filter_points(points)
         self.last = {'kps': kps, 'des': des}
-        return matches
+        return points
 
     @staticmethod
-    def _sort_matches(matches):
-        def sort_by_distance(match):
+    def _filter_matches(matches):
+        def filter_by_distance(match):
             m, n = match
-            return m.distance < 0.55*n.distance
-        return filter(sort_by_distance, matches)
+            return m.distance < 0.5*n.distance
+        return filter(filter_by_distance, matches)
+
+    @staticmethod
+    def _filter_points(points):
+        if len(points) > 0:
+            points = np.array(points)
+            model, inliers = ransac(
+                (points[:, 0], points[:, 1]),
+                EssentialMatrixTransform,
+                min_samples=8,
+                residual_threshold=2,
+                max_trials=100
+            )
+            return points[inliers]
+        return []
 
     def _convert_to_points(self, kps, matches):
         ret = []
         for m, n in matches:
-            ret.append((kps[m.queryIdx], self.last['kps'][m.trainIdx]))
+            kp1 = kps[m.queryIdx].pt
+            kp2 = self.last['kps'][m.trainIdx].pt
+            ret.append((kp1, kp2))
         return ret
 
     def extract_features(self, frame: Frame):

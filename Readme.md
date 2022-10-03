@@ -24,3 +24,13 @@ for frame in WindowStream(window).get_stream():
 # Create video file "wow_sample.avi"
 VideoRecorder.create_video_from_queue(queue, "wow_sample", fps=120)
 ```
+
+## Help:
+- to run mss_window on linux:
+```bash
+xhost + 
+```
+- to execute code on linux:
+```shell
+sudo <'path to interpreter'> main.py 
+``` 

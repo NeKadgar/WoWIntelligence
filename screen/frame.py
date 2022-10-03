@@ -27,8 +27,8 @@ class Frame:
     def draw_matches_lines(self, matches):
         image = self.image.copy()
         for p1, p2 in matches:
-            u1, v1 = map(lambda x: int(round(x)), p1.pt)
-            u2, v2 = map(lambda x: int(round(x)), p2.pt)
+            u1, v1 = map(lambda x: int(round(x)), p1)
+            u2, v2 = map(lambda x: int(round(x)), p2)
             image = cv2.line(image, (u1, v1), (u2, v2), (0, 0, 255), 2)  # noqa
         return image
 
